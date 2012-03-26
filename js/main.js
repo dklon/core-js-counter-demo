@@ -1,13 +1,12 @@
 require([
     'core/app',
     
-    'modules/infrastructure/ko',
+    'app/infrastructure/ko',
+    'app/infrastructure/ticker',
+    'app/infrastructure/counter',
+    'app/infrastructure/log',
     
-    'modules/counter',
-    'modules/ticker',
-    'modules/log',
-    
-    'controllers/home_controller'
+    'app/controllers/home_controller'
 ], function(app) {
 
     app.initialize({
