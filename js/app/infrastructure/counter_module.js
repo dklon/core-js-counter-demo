@@ -24,10 +24,6 @@ define([
                 this.ready();
             },
             
-            "@Counter.reset": function() {
-                counter = 0;
-            },
-            
             "@Ticker.tick": function() {
                 this.inc();
             },
@@ -45,11 +41,11 @@ define([
             },
             
             pause: function() {
-                sandbox.ticker.stop();
+                sandbox.publish("Ticker.stop");
             },
             
             resume: function() {
-                sandbox.ticker.start();
+                sandbox.publish("Ticker.start");
             }
         };
         

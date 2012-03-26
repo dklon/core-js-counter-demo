@@ -5,21 +5,22 @@ define([
 
     app.core.define('HomeController', function(sandbox) {
     
-        var viewModel = {
-            count: ko.observable(0),
-
-            paused: ko.observable(false),
-            
-            pause: function() {
-                sandbox.counter.pause();
-                this.paused(true);
-            },
-            
-            resume: function() {
-                sandbox.counter.resume();
-                this.paused(false);
-            }
+        var Counter = function() {
+            this.count = ko.observable(0);
+            this.paused = ko.observable(false);
         };
+        
+        Counter.prototype.pause = function() {
+            sandbox.counter.pause();
+            this.paused(true);
+        };
+            
+        Counter.prototype.resume = function() {
+            sandbox.counter.resume();
+            this.paused(false);
+        };
+        
+        var viewModel = new Counter();
     
         var controller = {
         

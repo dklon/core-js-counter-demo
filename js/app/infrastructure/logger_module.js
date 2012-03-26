@@ -2,7 +2,7 @@ define([
     'core/app'
 ], function(app) {
 
-    app.core.define('Log', function(sandbox) {
+    app.core.define('Logger', function(sandbox) {
     
         function log(msg) {
             console.log(msg + ' [' + new Date().toString() + ']');

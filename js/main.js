@@ -1,10 +1,10 @@
 require([
     'core/app',
     
-    'app/infrastructure/ko',
-    'app/infrastructure/ticker',
-    'app/infrastructure/counter',
-    'app/infrastructure/log',
+    'app/infrastructure/ko_module',
+    'app/infrastructure/ticker_module',
+    'app/infrastructure/counter_module',
+    'app/infrastructure/logger_module',
     
     'app/controllers/home_controller'
 ], function(app) {

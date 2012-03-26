@@ -10,15 +10,17 @@ define([
     
         var module = {
         
-            "!!Application.extend(ticker)": {
-                start: 'start',
-                stop: 'stop'
-            },
-        
             "@Application.initialize": function() {
-                this.start();
-            
+                this.start();            
                 this.ready();
+            },
+            
+            "@Ticker.start": function() {
+                this.start();
+            },
+            
+            "@Ticker.stop": function() {
+                this.stop();
             },
             
             start: function() {

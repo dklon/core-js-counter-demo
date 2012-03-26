@@ -46,6 +46,29 @@ define([
             },
             subscribe: function(event, handler) {
                 mediator.subscribe(event, handler);
+            },
+            bindSubscriptions: function(obj, objName) {
+                _.each(obj, function(fn, fnName) {
+                    var regex = /^@((\w+)\.)?(\w+)$/,
+                        match = regex.exec(fnName);
+                        
+                    if (match) {
+                        if (typeof fn == 'function') {
+                            var eventScope = match[2],
+                                eventName = match[3],
+                                fullEventName = (eventScope ? eventScope : objName)
+                                    + "." + eventName;
+                            
+                            mediator.subscribe(fullEventName, obj, fn);
+                        } else {
+                            // TODO: error
+                        }
+                    }
+                });
+                
+                obj.publish = function(event, args) {
+                    mediator.publish((objName ? (objName + '.') : '') + event, args);
+                };
             }
         };
     };
@@ -66,23 +89,7 @@ define([
             var sandbox = app.sandbox(name),
                 module = ctor(sandbox);
             
-            _.each(module, function(fn, fnName) {
-                var regex = /^@((\w+)\.)?(\w+)$/,
-                    match = regex.exec(fnName);
-                    
-                if (match) {
-                    if (typeof fn == 'function') {
-                        var eventScope = match[2],
-                            eventName = match[3],
-                            fullEventName = (eventScope ? eventScope : moduleName)
-                                + "." + eventName;
-                        
-                        mediator.subscribe(fullEventName, module, fn);
-                    } else {
-                        // TODO: error
-                    }
-                }
-            });
+            sandbox.bindSubscriptions(module, name);
             
             var extensions = {},
                 templates = {};
@@ -114,10 +121,6 @@ define([
                 }
             });
 
-            module.publish = function(event, args) {
-                mediator.publish(name + '.' + event, args);
-            };
-            
             module.ready = function() {
                 mediator.publish(name + '.ready', [module]);
             };

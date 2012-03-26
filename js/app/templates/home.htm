@@ -1,6 +1,7 @@
 <script type="text/x-jquery-tmpl">
     
-    <div class="hero-unit">
+    <div class="hero-unit" data-bind="css: { paused: paused }">
+        
         <h1><%= count() %></h1>
         <p>at the last count</p>
         
@@ -21,6 +22,7 @@
 
             <% } %>
         </p>
+    
     </div>
     
 </script>
