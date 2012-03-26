@@ -4,10 +4,8 @@ define([], function() {
         this.count = ko.observable(0);
         this.paused = ko.observable(false);
         
-        var self = this;
-        
         this["@Counter.changed"] = function(count) {
-            self.count(count);
+            this.count(count);
         };
     };
     
