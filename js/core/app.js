@@ -31,8 +31,6 @@ define([
                 });
             });
             
-            _modules.Counter.sandbox.counter.get();
-        
             mediator.publish("Application.initialize");
             router.start();
             mediator.publish("Application.ready");

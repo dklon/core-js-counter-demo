@@ -1,8 +1,6 @@
 define([], function() {
     
-    var Counter = function(sandbox) {
-        this._sandbox = sandbox;
-        
+    var Counter = function() {
         this.count = ko.observable(0);
         this.paused = ko.observable(false);
         
@@ -12,13 +10,17 @@ define([], function() {
     };
     
     Counter.prototype.pause = function() {
-        this._sandbox.counter.pause();
+        this.publish("Counter.pause");
         this.paused(true);
     };
         
     Counter.prototype.resume = function() {
-        this._sandbox.counter.resume();
+        this.publish("Counter.resume");
         this.paused(false);
+    };
+    
+    Counter.prototype.reset = function() {
+        this.publish("Counter.reset");
     };
 
     return Counter;

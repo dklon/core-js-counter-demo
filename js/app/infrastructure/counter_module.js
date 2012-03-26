@@ -6,17 +6,7 @@ define([
     
         var count = 0;
         
-        var module = {
-        
-            // directives
-            
-            "!!Application.extend(counter)": {
-                inc: 'inc',
-                get: 'get',
-                pause: 'pause',
-                resume: 'resume'
-            },
-            
+        var module = {            
             
             // subscriptions
             
@@ -28,24 +18,20 @@ define([
                 this.inc();
             },
             
+            "@pause": function() {
+                sandbox.publish("Ticker.stop");
+            },
+            
+            "@resume": function() {
+                sandbox.publish("Ticker.start");
+            },
+            
             
             // implementation
             
             inc: function() {
                 ++count;
                 this.publish('changed', [count]);
-            },
-            
-            get: function() {
-                return count;
-            },
-            
-            pause: function() {
-                sandbox.publish("Ticker.stop");
-            },
-            
-            resume: function() {
-                sandbox.publish("Ticker.start");
             }
         };
         
