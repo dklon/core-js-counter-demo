@@ -47,7 +47,7 @@ define([
             subscribe: function(event, handler) {
                 mediator.subscribe(event, handler);
             },
-            bindSubscriptions: function(obj, objName) {
+            bindSubscriptions: function(obj) {
                 _.each(obj, function(fn, fnName) {
                     var regex = /^@((\w+)\.)?(\w+)$/,
                         match = regex.exec(fnName);
@@ -56,7 +56,7 @@ define([
                         if (typeof fn == 'function') {
                             var eventScope = match[2],
                                 eventName = match[3],
-                                fullEventName = (eventScope ? eventScope : objName)
+                                fullEventName = (eventScope ? eventScope : name)
                                     + "." + eventName;
                             
                             mediator.subscribe(fullEventName, obj, fn);
@@ -67,8 +67,14 @@ define([
                 });
                 
                 obj.publish = function(event, args) {
-                    mediator.publish((objName ? (objName + '.') : '') + event, args);
+                    var fullEventName = /.*\..*$/.exec(event)
+                        ? event
+                        : name + '.' + event;
+
+                    mediator.publish(fullEventName, args);
                 };
+                
+                return obj;
             }
         };
     };
@@ -89,7 +95,7 @@ define([
             var sandbox = app.sandbox(name),
                 module = ctor(sandbox);
             
-            sandbox.bindSubscriptions(module, name);
+            sandbox.bindSubscriptions(module);
             
             var extensions = {},
                 templates = {};

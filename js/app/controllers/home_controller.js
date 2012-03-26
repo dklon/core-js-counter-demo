@@ -1,26 +1,10 @@
 define([
     'core/app',
+    'app/viewmodels/counter',
     'text!app/templates/home.htm'
-], function(app, homeTmpl) {
+], function(app, Counter, homeTmpl) {
 
     app.core.define('HomeController', function(sandbox) {
-    
-        var Counter = function() {
-            this.count = ko.observable(0);
-            this.paused = ko.observable(false);
-        };
-        
-        Counter.prototype.pause = function() {
-            sandbox.counter.pause();
-            this.paused(true);
-        };
-            
-        Counter.prototype.resume = function() {
-            sandbox.counter.resume();
-            this.paused(false);
-        };
-        
-        var viewModel = new Counter();
     
         var controller = {
         
@@ -36,36 +20,10 @@ define([
 
             },
             
-            "@Counter.changed": function(count) {
-                viewModel.count(count);
-            },
-        
             index: function() {
-                /*var viewModel = {
-                    count: ko.observable(sandbox.counter.get()),
-                    
-                    state: ko.observable('paused'),
-
-                    "@Counter.change": function(count) {
-                        this.count(count);
-                    },
-                    
-                    "@Ticker.start": function() {
-                        this.state('counting');
-                    },
-                    
-                    "@Ticker.pause": function() {
-                        this.state('paused');
-                    }
-                };
-                
-                this.subscribe(viewModel);
-                
-                sandbox.ticker.start();*/
-
-                // app.renderView('timer-tmpl');
-                
-                sandbox.tmpl.render('home-tmpl', viewModel);
+                var counter = new Counter(sandbox);                
+                sandbox.bindSubscriptions(counter);
+                sandbox.tmpl.render('home-tmpl', counter);
             }            
         };
         

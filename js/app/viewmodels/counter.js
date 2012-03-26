@@ -1,19 +1,25 @@
 define([], function() {
     
-    var Counter = function() {
+    var Counter = function(sandbox) {
+        this._sandbox = sandbox;
+        
         this.count = ko.observable(0);
         this.paused = ko.observable(false);
+        
+        this["@Counter.changed"] = function(count) {
+            this.count(count);
+        };
     };
     
     Counter.prototype.pause = function() {
-        sandbox.counter.pause();
+        this._sandbox.counter.pause();
         this.paused(true);
     };
         
     Counter.prototype.resume = function() {
-        sandbox.counter.resume();
+        this._sandbox.counter.resume();
         this.paused(false);
     };
-    
+
     return Counter;
 });
