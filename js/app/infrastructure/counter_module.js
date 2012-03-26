@@ -26,6 +26,11 @@ define([
                 sandbox.publish("Ticker.start");
             },
             
+            "@reset": function() {
+                count = 0;
+                this.publish('changed', [count]);
+            },
+            
             
             // implementation
             

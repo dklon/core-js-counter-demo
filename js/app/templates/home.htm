@@ -21,6 +21,10 @@
                 </button>
 
             <% } %>
+            
+            <button data-bind="click: reset, visible: count() > 0" class="btn btn-large">
+                reset
+            </button>
         </p>
     
     </div>
