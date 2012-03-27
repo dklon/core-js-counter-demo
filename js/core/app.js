@@ -6,7 +6,36 @@ define([
     var _modules = {};
     
     var app = {
-        initialize: function() {
+        initialize: function(config) {
+        
+            if (config.templating) {
+                app.tmpl = {
+                    renderView: config.templating.renderView
+                };
+                
+                config.templating.initialize();
+            }
+            
+            if (config.logging) {
+                var log = {};
+                
+                _.each(config.logging.severityLevels, function(_, severityLevel) {
+                    log[severityLevel] = function(message) {
+                        var timestamp = new Date(),
+                            formattedMessage = config.logging.formatMessage(message, severityLevel, timestamp);
+                        
+                        config.logging.log(message, severityLevel, timestamp, formattedMessage);
+                        console.log(formattedMessage);
+                    };
+                });
+            
+                if (config.logging.initialize) {
+                    config.logging.initialize();
+                }
+                
+                app.log = log;
+            }
+        
             _.each(_modules, function(srcModule) {
                 _.each(srcModule.extensions, function(ext, extName) {
                     _.each(_modules, function(tgtModule) {
@@ -27,7 +56,8 @@ define([
                 });
                 
                 _.each(srcModule.templates, function(tmpl, name) {
-                    mediator.publish("Template.initialize", [name, tmpl]);
+                    config.templating.registerTemplate(name, tmpl);
+                    // mediator.publish("Template.initialize", [name, tmpl]);
                 });
             });
             

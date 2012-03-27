@@ -21,9 +21,9 @@ define([
             },
             
             index: function() {
-                var counter = new Counter(sandbox);                
+                var counter = new Counter();                
                 sandbox.bindSubscriptions(counter);
-                sandbox.tmpl.render('home-tmpl', counter);
+                app.tmpl.renderView('home-tmpl', counter);
             }            
         };
         

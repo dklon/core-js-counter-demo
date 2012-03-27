@@ -1,4 +1,4 @@
-define([
+/*define([
     'core/app',
     'app/master_view'
 ], function(app, masterView) {
@@ -58,4 +58,4 @@ define([
         return module;
     });
 
-});
+});*/

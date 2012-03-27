@@ -24,23 +24,23 @@ define([
             },
             
             start: function() {
-                sandbox.log.notice('Starting ticker');
+                app.log.notice('Starting ticker');
                 
                 if (interval == null) {
                     interval = setInterval(tick, 1000);
                 } else {
-                    sandbox.log.notice('Ticker has already started');
+                    app.log.notice('Ticker has already started');
                 }
             },
             
             stop: function() {
-                sandbox.log.notice('Stopping ticker');
+                app.log.notice('Stopping ticker');
 
                 if (interval != null) {
                     clearInterval(interval);
                     interval = null;
                 } else {
-                    sandbox.log.notice('Ticker is already stopped');
+                    app.log.notice('Ticker is already stopped');
                 }
             }
         };
