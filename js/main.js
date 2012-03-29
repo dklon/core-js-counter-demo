@@ -4,8 +4,8 @@ require([
     'config/routing',
     'config/templating',
     
-    'app/infrastructure/ticker_module',
-    'app/infrastructure/counter_module',
+    'app/modules/ticker_module',
+    'app/modules/counter_module',
     
     'app/controllers/home_controller'
 ], function(app, routingConfig, templatingConfig) {
