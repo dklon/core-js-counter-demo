@@ -1,9 +1,8 @@
 define([
-    'engines/routing_engine'
-], function(routingEngine) {
+], function() {
 
     var config = {
-        engine: routingEngine
+        module: 'Router'
     };
     
     return config;

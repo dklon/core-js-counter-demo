@@ -4,6 +4,9 @@ require([
     'config/routing',
     'config/templating',
     
+    'infrastructure/routing_module',
+    'infrastructure/templating_module',
+    
     'app/modules/ticker_module',
     'app/modules/counter_module',
     

@@ -20,6 +20,10 @@ define([
 
             },
             
+            "@Application.initialize": function(app) {
+                this.ready();
+            },
+            
             index: function() {
                 var counter = new Counter();                
                 sandbox.bindSubscriptions(counter);

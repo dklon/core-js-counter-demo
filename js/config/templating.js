@@ -1,10 +1,9 @@
 define([
-    'engines/templating_engine',
     'text!app/templates/master.htm'
-], function(templatingEngine, masterTmpl) {
+], function(masterTmpl) {
 
     var config = {
-        engine: templatingEngine,
+        module: 'Templates',
         defaultMaster: masterTmpl
     };
     

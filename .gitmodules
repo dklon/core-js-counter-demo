@@ -1,6 +1,6 @@
 [submodule "js/core"]
 	path = js/core
 	url = git@github.com:jbrunton/core-js.git
-[submodule "js/engines"]
-	path = js/engines
-	url = git@github.com:jbrunton/js-app-engines.git
+[submodule "js/infrastructure"]
+	path = js/infrastructure
+	url = git@github.com:jbrunton/js-app-infrastructure.git
