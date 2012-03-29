@@ -1,5 +1,5 @@
 define([
-    'lib/user/routing_engine'
+    'engines/routing_engine'
 ], function(routingEngine) {
 
     var config = {

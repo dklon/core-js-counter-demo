@@ -1,5 +1,5 @@
 define([
-    'lib/user/templating_engine',
+    'engines/templating_engine',
     'text!app/templates/master.htm'
 ], function(templatingEngine, masterTmpl) {
 
