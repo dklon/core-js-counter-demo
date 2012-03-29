@@ -4,30 +4,30 @@ define([
 
     var _modules = {};
     
-    var _routingEngine,
-        _templatingEngine;
-    
     var app = {
         initialize: function(config) {
         
+            var routingEngine,
+                templatingEngine;
+
             if (config.templating) {
-                _templatingEngine = config.templating.engine;
+                templatingEngine = config.templating.engine;
                 
                 app.tmpl = {
-                    renderView: _templatingEngine.renderView
+                    renderView: templatingEngine.renderView
                 };
                 
                 if (config.templating.defaultMaster) {
-                    _templatingEngine.registerMaster('default', config.templating.defaultMaster);
+                    templatingEngine.registerMaster('default', config.templating.defaultMaster);
                 }
                 
-                _templatingEngine.initialize();
+                templatingEngine.initialize();
             }
             
             if (config.routing) {
-                _routingEngine = config.routing.engine;
+                routingEngine = config.routing.engine;
                 
-                _routingEngine.initialize();
+                routingEngine.initialize();
             }
             
 /*            if (config.logging) {
@@ -75,7 +75,7 @@ define([
                             _.each(drArg.routes, function(name, route) {
                                 var callback = moduleInfo.module[name];
                                 
-                                _routingEngine.route(route, name, function() {
+                                routingEngine.route(route, name, function() {
                                     // app.context.start();
                                     callback.apply(moduleInfo.module, arguments);
                                 });
@@ -83,7 +83,7 @@ define([
                             });
                             
                             _.each(drArg.templates, function(tmpl, name) {
-                                _templatingEngine.registerTemplate(name, tmpl);
+                                templatingEngine.registerTemplate(name, tmpl);
                             });
                         }
                     }
@@ -92,8 +92,8 @@ define([
         
             mediator.publish("Application.initialize");
             
-            if (_routingEngine) {
-                _routingEngine.start();
+            if (routingEngine) {
+                routingEngine.start();
             }
             
             mediator.publish("Application.ready");
