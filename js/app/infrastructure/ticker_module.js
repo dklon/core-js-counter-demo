@@ -5,7 +5,7 @@ define([
     app.core.define('Ticker', function(sandbox) {
     
         var tick = function() {
-            module.publish("tick");
+            module.tick();
         }, interval = null;
     
         var module = {
@@ -21,6 +21,10 @@ define([
             
             "@Ticker.stop": function() {
                 this.stop();
+            },
+            
+            tick: function() {
+                this.publish('tick');
             },
             
             start: function() {
