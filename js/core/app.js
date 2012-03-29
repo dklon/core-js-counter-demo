@@ -1,22 +1,36 @@
 define([
-    'core/mediator',
-    'core/router'
-], function(mediator, router) {
+    'core/mediator'
+], function(mediator) {
 
     var _modules = {};
+    
+    var _routingEngine,
+        _templatingEngine;
     
     var app = {
         initialize: function(config) {
         
             if (config.templating) {
+                _templatingEngine = config.templating.engine;
+                
                 app.tmpl = {
-                    renderView: config.templating.renderView
+                    renderView: _templatingEngine.renderView
                 };
                 
-                config.templating.initialize();
+                if (config.templating.defaultMaster) {
+                    _templatingEngine.registerMaster('default', config.templating.defaultMaster);
+                }
+                
+                _templatingEngine.initialize();
             }
             
-            if (config.logging) {
+            if (config.routing) {
+                _routingEngine = config.routing.engine;
+                
+                _routingEngine.initialize();
+            }
+            
+/*            if (config.logging) {
                 var log = {};
                 
                 _.each(config.logging.severityLevels, function(_, severityLevel) {
@@ -34,7 +48,7 @@ define([
                 }
                 
                 app.log = log;
-            }
+            }*/
         
             _.each(_modules, function(srcModule) {
                 _.each(srcModule.extensions, function(ext, extName) {
@@ -56,13 +70,24 @@ define([
                 });
                 
                 _.each(srcModule.templates, function(tmpl, name) {
-                    config.templating.registerTemplate(name, tmpl);
+                    _templatingEngine.registerTemplate(name, tmpl);
                     // mediator.publish("Template.initialize", [name, tmpl]);
+                });
+                
+                _.each(srcModule.routes, function(route) {
+                    _routingEngine.route(route.route, route.name, function() {
+                        // app.context.start();
+                        route.callback.apply(srcModule, arguments);
+                    });
                 });
             });
             
             mediator.publish("Application.initialize");
-            router.start();
+            
+            if (_routingEngine) {
+                _routingEngine.start();
+            }
+            
             mediator.publish("Application.ready");
         }
     };
@@ -126,7 +151,8 @@ define([
             sandbox.bindSubscriptions(module);
             
             var extensions = {},
-                templates = {};
+                templates = {},
+                routes = [];
             
             _.each(module, function(drArg, dr) {
                 var regex = /^!!(.*)\((.*)\)$/,
@@ -141,11 +167,9 @@ define([
                     } else if (drName == "Application.controller") {
                         _.each(drArg.routes, function(name, route) {
                             var callback = module[name];
+                            
+                            routes.push({ name: name, route: route, callback: callback });
                     
-                            router.route(route, name, function() {
-                                // app.context.start();
-                                callback.apply(module, arguments);
-                            });
                         });
                         
                         _.each(drArg.templates, function(tmpl, name) {
@@ -165,7 +189,8 @@ define([
                 module: module,
                 sandbox: sandbox,
                 extensions: extensions,
-                templates: templates
+                templates: templates,
+                routes: routes
             };
         
         }

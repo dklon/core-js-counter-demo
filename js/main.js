@@ -1,19 +1,17 @@
 require([
     'core/app',
     
-    'config/logging',
+    'config/routing',
     'config/templating',
     
-    'app/infrastructure/ko_module',
     'app/infrastructure/ticker_module',
     'app/infrastructure/counter_module',
-    'app/infrastructure/logger_module',
     
     'app/controllers/home_controller'
-], function(app, loggingConfig, templatingConfig) {
+], function(app, routingConfig, templatingConfig) {
 
     app.initialize({
-        logging: loggingConfig,
+        routing: routingConfig,
         templating: templatingConfig
     });
 
