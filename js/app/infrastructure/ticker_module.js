@@ -11,8 +11,11 @@ define([
         var module = {
         
             "@Application.initialize": function() {
-                this.start();            
                 this.ready();
+            },
+            
+            "@Application.ready": function() {
+                this.start();            
             },
             
             "@Ticker.start": function() {
