@@ -49,39 +49,47 @@ define([
                 
                 app.log = log;
             }*/
-        
-            _.each(_modules, function(srcModule) {
-                _.each(srcModule.extensions, function(ext, extName) {
-                    _.each(_modules, function(tgtModule) {
-                        var sandbox = tgtModule.sandbox;
-                        
-                        sandbox[extName] = {};
-
-                        _.each(ext, function(value, field) {
-                            if (typeof value == 'string') {
-                                sandbox[extName][field] = function() {
-                                    return srcModule.module[value].apply(srcModule.module, arguments);
-                                };
-                            } else {
-                                sandbox[extName][field] = value;
-                            }
-                        });
-                    });
-                });
-                
-                _.each(srcModule.templates, function(tmpl, name) {
-                    _templatingEngine.registerTemplate(name, tmpl);
-                    // mediator.publish("Template.initialize", [name, tmpl]);
-                });
-                
-                _.each(srcModule.routes, function(route) {
-                    _routingEngine.route(route.route, route.name, function() {
-                        // app.context.start();
-                        route.callback.apply(srcModule, arguments);
-                    });
-                });
+            
+            
+            // bind subscriptions
+            
+            _.each(_modules, function(moduleInfo) {
+                moduleInfo.sandbox.bindSubscriptions(moduleInfo.module);
             });
             
+            
+            // apply directives
+            
+            _.each(_modules, function(moduleInfo, name) {
+                _.each(moduleInfo.module, function(drArg, dr) {
+                    var regex = /^!!(.*)\((.*)\)$/,
+                        match = regex.exec(dr);
+                        
+                    if (match) {
+                        var drName = match[1],
+                            drArgs = match[2].replace(/\s/g, '').split(',');
+                        
+                        if (drName == "Application.extend") {
+                            // extensions[drArgs[0]] = drArg;
+                        } else if (drName == "Application.controller") {
+                            _.each(drArg.routes, function(name, route) {
+                                var callback = moduleInfo.module[name];
+                                
+                                _routingEngine.route(route, name, function() {
+                                    // app.context.start();
+                                    callback.apply(moduleInfo.module, arguments);
+                                });
+                        
+                            });
+                            
+                            _.each(drArg.templates, function(tmpl, name) {
+                                _templatingEngine.registerTemplate(name, tmpl);
+                            });
+                        }
+                    }
+                });
+            });
+        
             mediator.publish("Application.initialize");
             
             if (_routingEngine) {
@@ -148,49 +156,13 @@ define([
             var sandbox = app.sandbox(name),
                 module = ctor(sandbox);
             
-            sandbox.bindSubscriptions(module);
-            
-            var extensions = {},
-                templates = {},
-                routes = [];
-            
-            _.each(module, function(drArg, dr) {
-                var regex = /^!!(.*)\((.*)\)$/,
-                    match = regex.exec(dr);
-                    
-                if (match) {
-                    var drName = match[1],
-                        drArgs = match[2].replace(/\s/g, '').split(',');
-                    
-                    if (drName == "Application.extend") {
-                        extensions[drArgs[0]] = drArg;
-                    } else if (drName == "Application.controller") {
-                        _.each(drArg.routes, function(name, route) {
-                            var callback = module[name];
-                            
-                            routes.push({ name: name, route: route, callback: callback });
-                    
-                        });
-                        
-                        _.each(drArg.templates, function(tmpl, name) {
-                            templates[name] = tmpl;
-                        });
-                    }
-                }
-            });
-
             module.ready = function() {
                 mediator.publish(name + '.ready', [module]);
             };
             
-            // TODO: directives
-            
             _modules[name] = {
                 module: module,
                 sandbox: sandbox,
-                extensions: extensions,
-                templates: templates,
-                routes: routes
             };
         
         }
