@@ -4,7 +4,11 @@ define([
 
     var config = {
         module: 'Templates',
-        defaultMaster: masterTmpl
+        defaultMaster: { name: 'master', template: $(masterTmpl) },
+        defaultSection: 'content',
+        defaultBindings: {
+            header: { name: 'header', data: { foo: 'bar' } }
+        }
     };
     
     return config;
